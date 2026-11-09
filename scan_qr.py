@@ -1,5 +1,6 @@
 """Read QR text locally without following any embedded links."""
 import argparse
+import json
 import sys
 
 from PIL import Image, ImageOps, UnidentifiedImageError
@@ -9,6 +10,7 @@ import zxingcpp
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('image', help='path to a PNG, JPEG or other supported image')
+    parser.add_argument('--json', action='store_true', help='print a JSON array of decoded strings')
     args = parser.parse_args()
     try:
         with Image.open(args.image) as source:
@@ -20,8 +22,11 @@ def main() -> int:
     if not codes:
         print('No readable QR code found.', file=sys.stderr)
         return 1
-    for code in codes:
-        print(code.text)
+    payloads = [code.text for code in codes]
+    if args.json:
+        print(json.dumps(payloads, ensure_ascii=False))
+    else:
+        print("\n".join(payloads))
     return 0
 
 
