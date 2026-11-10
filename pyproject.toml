@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "samery-qr"
-version = "0.1.0"
+version = "0.2.0"
 description = "Read QR codes locally from images and print text or JSON."
 readme = "README.md"
 requires-python = ">=3.12"
