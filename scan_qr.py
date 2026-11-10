@@ -9,11 +9,12 @@ import zxingcpp
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('image', help='path to a PNG, JPEG or other supported image')
+    parser.add_argument('image', help='image path, or - to read image bytes from standard input')
     parser.add_argument('--json', action='store_true', help='print a JSON array of decoded strings')
     args = parser.parse_args()
     try:
-        with Image.open(args.image) as source:
+        image_input = sys.stdin.buffer if args.image == '-' else args.image
+        with Image.open(image_input) as source:
             image = ImageOps.exif_transpose(source).convert('RGB')
         codes = zxingcpp.read_barcodes(image, formats=zxingcpp.BarcodeFormat.QRCode)
     except (OSError, UnidentifiedImageError, Image.DecompressionBombError) as error:
