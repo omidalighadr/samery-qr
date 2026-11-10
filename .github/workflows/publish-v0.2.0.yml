@@ -1,0 +1,32 @@
+name: Publish Samery QR v0.2.0
+on:
+  push:
+    branches:
+      - release/publish-v0.2.0
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Publish the tested 0.2.0 commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create v0.2.0 \
+            --repo "$GITHUB_REPOSITORY" \
+            --target 7bc3d18a20eaaeba79c510b348d75506fd84aa36 \
+            --title "Samery QR v0.2.0" \
+            --latest \
+            --notes-file - <<'NOTES'
+          Samery QR can now read image bytes from standard input. Pass `-` as the image path to use it in a pipeline. Regular file paths and existing exit codes are unchanged.
+
+          ```sh
+          python -m pip install "git+https://github.com/omidalighadr/samery-qr.git@v0.2.0"
+          cat "QR code.png" | samery-qr --json -
+          ```
+
+          Tested on Python 3.12 and 3.13 in GitHub Actions.
+          NOTES
