@@ -45,6 +45,14 @@ class ScanQRTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(json.loads(result.stdout), [PAYLOAD])
 
+    def test_image_from_pipe(self):
+        result = subprocess.run(
+            [sys.executable, '-B', str(SCRIPT), '--json', '-'],
+            input=self.png.read_bytes(), capture_output=True, timeout=15,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr.decode('utf-8'))
+        self.assertEqual(json.loads(result.stdout), [PAYLOAD])
+
     def test_image_without_qr(self):
         result = self.run_cli('--json', self.blank)
         self.assertEqual(result.returncode, 1)

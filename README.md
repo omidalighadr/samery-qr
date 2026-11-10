@@ -22,6 +22,14 @@ Run `python scan_qr.py` from the checkout if you prefer invoking the source dire
 
 PNG and JPEG work, including rotated images. Output goes to standard output; errors go to standard error. Exit codes are `0` for a decoded QR code, `1` when no readable QR is found, and `2` when the image or arguments cannot be read.
 
+### Read from a pipe
+
+Pass `-` to read image bytes from standard input. This works with `--json` too:
+
+```sh
+cat "photos/QR code.jpg" | samery-qr --json -
+```
+
 ### JSON output
 
 Use `--json` to get an array of decoded strings, which preserves line breaks and separates multiple codes:
