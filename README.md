@@ -6,6 +6,21 @@ A Python command-line tool that reads QR codes from images. It prints the decode
 
 Use Python 3.12 or newer. CI tests Python 3.12 and 3.13.
 
+### Install the released version
+
+With Git installed, run this in your Python environment:
+
+```sh
+python -m pip install "git+https://github.com/omidalighadr/samery-qr.git@v0.2.0"
+samery-qr --help
+```
+
+See the [v0.2.0 release](https://github.com/omidalighadr/samery-qr/releases/tag/v0.2.0) for release notes.
+
+### Install from a local checkout
+
+From the repository root:
+
 ```sh
 python3.12 -m venv .venv
 source .venv/bin/activate
