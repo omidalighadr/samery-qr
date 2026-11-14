@@ -28,7 +28,11 @@ class ScanQRTests(unittest.TestCase):
 
     @staticmethod
     def qr_image(payload):
-        barcode = zxingcpp.create_barcode(payload, zxingcpp.BarcodeFormat.QRCode)
+        return ScanQRTests.barcode_image(payload, zxingcpp.BarcodeFormat.QRCode)
+
+    @staticmethod
+    def barcode_image(payload, barcode_format):
+        barcode = zxingcpp.create_barcode(payload, barcode_format)
         pixels = memoryview(zxingcpp.write_barcode_to_image(barcode, scale=8))
         height, width = pixels.shape
         return Image.frombytes('L', (width, height), pixels.tobytes())
@@ -83,6 +87,15 @@ class ScanQRTests(unittest.TestCase):
 
     def test_image_without_qr(self):
         result = self.run_cli('--json', self.blank)
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual(result.stdout, '')
+        self.assertIn('No readable QR code', result.stderr)
+
+    def test_ignores_non_qr_barcode(self):
+        path = self.directory / 'code128.png'
+        self.barcode_image('123456', zxingcpp.BarcodeFormat.Code128).save(path)
+
+        result = self.run_cli('--json', path)
         self.assertEqual(result.returncode, 1)
         self.assertEqual(result.stdout, '')
         self.assertIn('No readable QR code', result.stderr)
